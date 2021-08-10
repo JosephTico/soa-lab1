@@ -37,6 +37,7 @@ function set_space(req, res, next) {
   }
 
   req.space = space_index;
+  delete req.body.id;
 
   next();
 }
@@ -51,6 +52,7 @@ function set_reservation(req, res, next) {
   }
 
   req.reservation = reservation_index;
+  delete req.body.id;
 
   next();
 }
@@ -62,7 +64,12 @@ app.get("/spaces", (req, res) => {
 
 // post new space
 app.post("/spaces", ensure_json, (req, res) => {
-  newSpace = { ...req.body, id: space_autoincrement++ };
+  let newSpace = {
+    ...req.body,
+    id: space_autoincrement++,
+    state: "free",
+  };
+
   spaces.push(newSpace);
   res.status(201).send(newSpace);
 });

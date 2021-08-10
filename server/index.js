@@ -6,7 +6,8 @@ const port = 3000;
 
 // Set up the server
 app.use(express.static("lab1"));
-app.use(bodyParser.json());
+app.use(express.json());
+
 app.listen(port, () => console.log(`Server running on port ${port}`));
 
 // Ensure json

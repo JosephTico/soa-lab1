@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "cors": "^2.8.5",
     "eslint": "^7.32.0",
     "express-ensure-ctype": "^1.0.0",
     "prettier": "^2.3.2"

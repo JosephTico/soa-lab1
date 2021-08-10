@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const ensure_ctype = require("express-ensure-ctype");
 const app = express();
@@ -7,6 +8,7 @@ const port = 3000;
 // Set up the server
 app.use(express.static("lab1"));
 app.use(express.json());
+app.use(cors());
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
 

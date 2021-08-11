@@ -1,10 +1,21 @@
 <template>
-  <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
-  <h1>Danicast's Smart Parking System</h1>
-  {{ spaces }}
-
   <div>
-    <button v-on:click="get_data">Greet</button>
+    <h1>Danicast's Smart Parking System</h1>
+    <p>Lista de parkeos:</p>
+    <ul>
+      <li v-for="space in spaces" :key="space.id">
+        Espacio #{{ space.id }}: {{ space.description }}
+      </li>
+    </ul>
+    <p>Lista de reservaciones:</p>
+    <ul>
+      <li v-for="reservation in reservations" :key="reservation.id">
+        Reservación #{{ reservation.id }}: {{ reservation }}
+      </li>
+    </ul>
+    <button>Nuevo espacio</button>
+    <button>Nueva reservación</button>
+    <button v-on:click="getSpaces">Actualizar</button>
   </div>
 </template>
 

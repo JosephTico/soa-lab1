@@ -1,46 +1,26 @@
 <template>
-
   <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
   <h1>Danicast's Smart Parking System</h1>
-  
+  {{ spaces }}
+
   <div>
     <button v-on:click="get_data">Greet</button>
-  
   </div>
- 
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
-  export default {
-    data() {
-      return {
-        posts: [],
-      };
-    },
+const spaces = ref([]);
+const reservations = ref([]);
 
-    methods: {
-        get_data: async function () {
-          var self = this;
-          try {
-            const response = await this.axios.get(
-              "http://localhost:3001/spaces"
-            );
-            // JSON responses are automatically parsed.
-            self.posts = response.data;
-            console.log(posts);
-          } catch (error) {
-            console.log(error);
-            alert(error);
-          }
-        },
-      },
+const getSpaces = async () => {
+  const response = await axios.get("http://localhost:3000/spaces");
+  spaces.value = response.data;
+};
 
-    // created() {
-    //   this.getData();
-    // },
-  };
-
+onMounted(getSpaces);
 </script>
 
 <style>

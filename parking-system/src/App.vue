@@ -4,17 +4,19 @@
     <p>Lista de parkeos:</p>
     <ul>
       <li v-for="space in spaces" :key="space.id">
-        Espacio #{{ space.id }}: {{ space.description }}
+        Espacio #{{ space.id }}: {{ space.description }} - Estado:
+        {{ space.state }}
       </li>
     </ul>
     <p>Lista de reservaciones:</p>
     <ul>
       <li v-for="reservation in reservations" :key="reservation.id">
         Reservación #{{ reservation.id }}: {{ reservation }}
+        <button v-on:click="deleteReservation(reservation.id)">X</button>
       </li>
     </ul>
-    <button>Nuevo espacio</button>
-    <button>Nueva reservación</button>
+    <button v-on:click="createSpace">Nuevo espacio</button>
+    <button v-on:click="bookSpace">Nueva reservación</button>
     <button v-on:click="getSpaces">Actualizar</button>
   </div>
 </template>
@@ -34,21 +36,23 @@ const getSpaces = async () => {
 };
 
 // Ask for space state
-// GET /spaces/{id} 
+// GET /spaces/{id}
 
 // Create Space
 // POST /spaces
-const createSpace = async (descripcion) => {
-  const data = { "description": descripcion };
+const createSpace = async () => {
+  let description = prompt("Inserte una descripción");
+  const data = { description };
   const response = await axios.post("http://localhost:3000/spaces", data);
   getSpaces();
+  getReservations();
 };
 
 // Modify Space Data
-// PUT /spaces/{id} 
+// PUT /spaces/{id}
 
 // Delete Space
-// DELETE /spaces/{id} 
+// DELETE /spaces/{id}
 
 // List of Reservations
 // GET /reservations
@@ -59,17 +63,41 @@ const getReservations = async () => {
 
 // Book an Space
 // POST /reservations
-const bookSpace = async (plate) => {
-  const data = { "plate": plate };
-  const response = await axios.post("http://localhost:3000/reservations", data);
-  getReservations();
+const bookSpace = async () => {
+  let plate = prompt("Inserte la placa");
+  const data = { plate };
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/reservations",
+      data
+    );
+    getSpaces();
+    getReservations();
+  } catch (error) {
+    alert("No se ha podido hacer la reservación, espacios llenos.");
+    getSpaces();
+    getReservations();
+  }
 };
 
 // Delete Reservation
 // DELETE /reservations/{id}
-
+const deleteReservation = async (id) => {
+  try {
+    const response = await axios.delete(
+      "http://localhost:3000/reservations/" + id
+    );
+    getSpaces();
+    getReservations();
+  } catch (error) {
+    alert("No se ha podido borrar.");
+    getSpaces();
+    getReservations();
+  }
+};
 
 onMounted(getSpaces);
+onMounted(getReservations);
 </script>
 
 <style>

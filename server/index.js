@@ -3,7 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const ensure_ctype = require("express-ensure-ctype");
 const app = express();
-const port = 3001;
+const port = 3000;
 
 // Set up the server
 app.use(express.static("lab1"));
@@ -35,7 +35,7 @@ function set_space(req, res, next) {
   const space_index = find_space(id);
 
   if (space_index === -1) {
-    return res.status(404).send("Space not found");
+    return res.status(404).send({ errors: "Space not found" });
   }
 
   req.space = space_index;
@@ -50,13 +50,17 @@ function set_reservation(req, res, next) {
   const reservation_index = find_reservation(id);
 
   if (reservation_index === -1) {
-    return res.status(404).send("Reservation not found");
+    return res.status(404).send({ errors: "Reservation not found" });
   }
 
   req.reservation = reservation_index;
   delete req.body.id;
 
   next();
+}
+
+function find_free_space() {
+  return spaces.findIndex((x) => x.state == "free");
 }
 
 // serve spaces as json
@@ -102,17 +106,29 @@ app.get("/reservations", (req, res) => {
 
 // post new reservation
 app.post("/reservations", ensure_json, (req, res) => {
+  const free_space = find_free_space();
+
+  if (free_space === -1) {
+    return res.status(400).send({ error: "No free space" });
+  }
+
+  spaces[find_space(free_space)].state = "in-use";
+
   newReservation = {
     ...req.body,
     id: reservations_autoincrement++,
+    space_id: free_space,
     time: new Date(),
   };
+
   reservations.push(newReservation);
   res.status(201).send(newReservation);
 });
 
 // delete reservation
 app.delete("/reservations/:id", set_reservation, (req, res) => {
+  space_index = find_space(reservations[req.reservation].space_id);
+  spaces[find_space(space_index)].state = "free";
   reservations.splice(req.reservation, 1);
   res.sendStatus(200);
 });

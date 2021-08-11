@@ -3,7 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const ensure_ctype = require("express-ensure-ctype");
 const app = express();
-const port = 3000;
+const port = 3001;
 
 // Set up the server
 app.use(express.static("lab1"));

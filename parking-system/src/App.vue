@@ -1,13 +1,46 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + Vite" />
+
+  <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
+  <h1>Danicast's Smart Parking System</h1>
+  
+  <div>
+    <button v-on:click="get_data">Greet</button>
+  
+  </div>
+ 
 </template>
 
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
+<script>
 
-// This starter template is using Vue 3 experimental <script setup> SFCs
-// Check out https://github.com/vuejs/rfcs/blob/master/active-rfcs/0040-script-setup.md
+  export default {
+    data() {
+      return {
+        posts: [],
+      };
+    },
+
+    methods: {
+        get_data: async function () {
+          var self = this;
+          try {
+            const response = await this.axios.get(
+              "http://localhost:3001/spaces"
+            );
+            // JSON responses are automatically parsed.
+            self.posts = response.data;
+            console.log(posts);
+          } catch (error) {
+            console.log(error);
+            alert(error);
+          }
+        },
+      },
+
+    // created() {
+    //   this.getData();
+    // },
+  };
+
 </script>
 
 <style>

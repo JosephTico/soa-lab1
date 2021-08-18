@@ -73,7 +73,23 @@ function find_free_space() {
 
 // serve spaces as json
 app.get("/spaces", (req, res) => {
-  res.json(spaces);
+
+  let filter = req.query.filter;
+  if (filter == null) {
+    filtered_spaces = spaces;
+  } else {
+    console.log("searching: "+filter)
+    filtered_spaces = spaces.filter((x) => x.description.includes(filter))
+  }
+  let limit = req.query.limit;//req.params.limit;
+  let offset = req.query.offset;
+  if (limit == null) {
+    res.json(filtered_spaces);
+  } else {
+    if (offset == null) {offset=0};
+    paged_spaces = filtered_spaces.slice(offset, +offset + +limit);
+    res.json(paged_spaces);
+  }
 });
 
 // post new space
@@ -86,7 +102,7 @@ app.post("/spaces", ensure_json, (req, res) => {
 
   spaces.push(newSpace);
   res.status(201).send(newSpace);
-});
+}); 
 
 // delete space
 app.delete("/spaces/:id", set_space, (req, res) => {

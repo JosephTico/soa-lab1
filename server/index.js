@@ -1,4 +1,6 @@
 const express = require("express");
+const https = require('https')
+const fs = require('fs')
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const ensure_ctype = require("express-ensure-ctype");
@@ -10,7 +12,13 @@ app.use(express.static("lab1"));
 app.use(express.json());
 app.use(cors());
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+
+https.createServer({
+  key: fs.readFileSync('localhost.key'),
+  cert: fs.readFileSync('localhost.crt')
+}, app).listen(3000, () => {
+  console.log(`Server running on port ${port}`)
+})
 
 // Ensure json
 const ensure_json = ensure_ctype("json");

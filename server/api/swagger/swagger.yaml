@@ -1,0 +1,84 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Inteligent Park System"
+host: localhost:3000
+basePath: /
+schemes:
+  - https
+consumes: 
+  - application/json
+produces:
+  - application/json
+paths:
+  /spaces:
+    get: 
+      summary: Return a list of spaces
+      parameters: 
+        - name: limit
+          in: path
+          required: false
+          type: integer
+        - name: offset
+          in: path
+          required: false
+          type: integer
+        - name: filter
+          in: path
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+    post:
+      summary: Create an space
+      parameters: 
+        - name: description
+          in: query
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: json
+            properties:
+              id:
+                type: integer
+                description: The user ID.
+              description:
+                type: string
+                description: Space description.
+              state:
+                type: string
+                description: Space current state
+  /spaces/{id}:
+    get: 
+      summary: Return an space state by id.
+      parameters:
+        - name: id  
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: json
+            properties:
+              id:
+                type: integer
+                description: The user ID.
+              description:
+                type: string
+                description: Space description.
+              state:
+                type: string
+                description: Space current state
+    delete:
+      summary: Delete an space state by id.
+      parameters:
+        - name: id  
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
